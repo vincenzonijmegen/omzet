@@ -4,6 +4,7 @@ import os
 
 import sqlite3
 import pandas as pd
+import re
 import dash
 from dash import dcc, html, Input, Output, State
 import plotly.express as px
