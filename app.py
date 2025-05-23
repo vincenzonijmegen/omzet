@@ -1,3 +1,6 @@
+from sqlalchemy import create_engine
+import os
+
 import sqlite3
 import pandas as pd
 import dash
@@ -6,15 +9,16 @@ import plotly.express as px
 
 # Database uitlezen
 def load_data():
-    conn = sqlite3.connect("sales_data.db")
-    df = pd.read_sql_query("SELECT * FROM sales", conn)
-    conn.close()
-    df["datum"] = pd.to_datetime(df["datum"], errors="coerce", dayfirst=True)
-    df.dropna(subset=["datum"], inplace=True)
+    url = "postgresql://postgres:houhetveilig66%B@db.zpuxihfmvijsuqnhvomu.supabase.co:5432/postgres"
+    engine = create_engine(url)
+    df = pd.read_sql("SELECT * FROM sales", engine)
+    df["datum"] = pd.to_datetime(df["datum"], dayfirst=True)
+    df["tijdstip"] = pd.to_datetime(df["tijdstip"], errors="coerce").dt.time
     df["maand"] = df["datum"].dt.month
     df["maandnaam"] = df["datum"].dt.strftime("%b")
     df["product"] = df["product"].str.strip()
     return df
+
 
 df = load_data()
 df["jaar"] = df["datum"].dt.year
