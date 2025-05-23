@@ -15,7 +15,12 @@ def load_data():
     supabase = create_client(url, key)
 
     response = supabase.table("sales").select("*").execute()
-    df = pd.DataFrame(response.data)
+
+    if not response.data:
+        raise ValueError("❌ Supabase gaf geen resultaten terug.")
+
+    df = pd.json_normalize(response.data)  # 👈 essentieel
+
     df["datum"] = pd.to_datetime(df["datum"], dayfirst=True)
     df["tijdstip"] = pd.to_datetime(df["tijdstip"], errors="coerce").dt.time
     df["maand"] = df["datum"].dt.month
