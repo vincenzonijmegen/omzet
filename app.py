@@ -9,16 +9,18 @@ import plotly.express as px
 
 # Database uitlezen
 def load_data():
-    url = "postgresql://postgres:houhetveilig66%B@db.zpuxihfmvijsuqnhvomu.supabase.co:5432/postgres?sslmode=require"
-    engine = create_engine(url)
-    df = pd.read_sql("SELECT * FROM sales", engine)
+    url = "https://zpuxihfmvijsuqnhvomu.supabase.co"
+    key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwdXhpaGZtdmlqc3Vxbmh2b211Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMTA0NDQsImV4cCI6MjA2MzU4NjQ0NH0.BUGvIjbHX2534bFiOYsknkaEjla5siwqQekEXzPyWAg"
+    supabase = create_client(url, key)
+
+    response = supabase.table("sales").select("*").execute()
+    df = pd.DataFrame(response.data)
     df["datum"] = pd.to_datetime(df["datum"], dayfirst=True)
     df["tijdstip"] = pd.to_datetime(df["tijdstip"], errors="coerce").dt.time
     df["maand"] = df["datum"].dt.month
     df["maandnaam"] = df["datum"].dt.strftime("%b")
     df["product"] = df["product"].str.strip()
     return df
-
 
 df = load_data()
 df["jaar"] = df["datum"].dt.year
