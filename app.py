@@ -1,3 +1,4 @@
+from supabase import create_client
 from sqlalchemy import create_engine
 import os
 
