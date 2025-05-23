@@ -9,7 +9,7 @@ import plotly.express as px
 
 # Database uitlezen
 def load_data():
-    url = "postgresql://postgres:houhetveilig66%B@db.zpuxihfmvijsuqnhvomu.supabase.co:5432/postgres"
+    url = "postgresql://postgres:houhetveilig66%B@db.zpuxihfmvijsuqnhvomu.supabase.co:5432/postgres?sslmode=require"
     engine = create_engine(url)
     df = pd.read_sql("SELECT * FROM sales", engine)
     df["datum"] = pd.to_datetime(df["datum"], dayfirst=True)
