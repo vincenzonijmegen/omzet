@@ -1,0 +1,6 @@
+*.exe 
+*.db 
+*.pkg 
+build/ 
+dist/ 
+__pycache__/ 
